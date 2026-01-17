@@ -52,10 +52,18 @@ export async function submitContactForm(
   }
 
   // メール送信処理
+  if (my_address === undefined) {
+    return {
+      success: false,
+      message: "メール送信の設定に問題があります。",
+      inputs: { name, email, message },
+    };
+  }
+
   try {
     const data = await resend.emails.send({
       from: "react-next-portfolio@resend.dev",
-      to: my_address, // ★ご自身のメールアドレスに修正済みか確認してください
+      to: my_address, 
       subject: `【ポートフォリオ】お問い合わせ: ${name}様より`,
       text: `
 --------------------------------------------------
@@ -89,8 +97,8 @@ ${message}
       // 成功時はフォームが消える（または完了画面になる）ので inputs は返さなくてOK
     };
 
-  } catch (error: any) {
-    console.error("Server Error:", JSON.stringify(error, null, 2));
+  } catch (error: unknown) {
+    console.error("Server Error:", error instanceof Error ? error.message : String(error));
     return {
       success: false,
       message: "サーバーエラーが発生しました。",
