@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DotGothic16 } from "next/font/google";
 import "./globals.css";
-// 作成したコンポーネントをインポート
-import { Header } from "@/app/components/Header";
-import { Footer } from "@/app/components/Footer";
+// Headerは削除
+import { Footer } from "./components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dotGothic = DotGothic16({
+  weight: ["400"],
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-dot-gothic",
 });
 
 export const metadata: Metadata = {
@@ -26,14 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col text-gray-900 dark:text-gray-100 bg-white dark:bg-black`}
+        className={`${dotGothic.className} antialiased min-h-screen flex flex-col`}
+        // 背景色
+        style={{ backgroundColor: "#008080", color: "#000" }}
       >
-        <Header />
+        {/* Headerは削除しました */}
         
-        {/* メインコンテンツエリア */}
-        <div className="flex-grow w-full">
+        {/* メインコンテンツ（デスクトップ領域） */}
+        <div className="flex-grow w-full p-4 pb-16"> 
+          {/* pb-16: タスクバーの分だけ余白を空ける */}
           {children}
         </div>
 

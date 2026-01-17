@@ -2,20 +2,23 @@ import Link from "next/link";
 
 export const Header = () => {
   return (
-    <header className="border-b bg-white dark:bg-black dark:border-gray-800 sticky top-0 z-10 backdrop-blur-sm bg-opacity-80">
-      <div className="max-w-4xl mx-auto px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight hover:opacity-70 transition">
-          Portfolio
+    <header className="win95-border-out bg-[#c0c0c0] mb-8 sticky top-0 z-50">
+      <div className="max-w-4xl mx-auto px-4 h-12 flex items-center justify-between">
+        {/* スタートボタン風ロゴ */}
+        <Link href="/" className="win95-border-out flex items-center gap-2 px-2 py-1 active:shadow-inner bg-[#c0c0c0]">
+          <span className="text-xl">💻</span>
+          <span className="font-bold text-black">Start Portfolio</span>
         </Link>
-        <nav className="flex gap-6 text-sm font-medium">
-          <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
-            Blog
+
+        <nav className="flex gap-4 text-sm font-medium">
+          <Link href="/" className="text-black hover:underline decoration-2">
+            📂 Blog
           </Link>
-          <Link href="/about" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
-            About
+          <Link href="/about" className="text-black hover:underline decoration-2">
+            👨‍💻 Profile
           </Link>
-          <Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400 transition">
-            Contact
+          <Link href="/contact" className="text-black hover:underline decoration-2">
+            📧 Contact
           </Link>
         </nav>
       </div>

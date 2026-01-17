@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { submitContactForm, ContactState } from "./actions";
-import Link from "next/link";
+import { Win95Window, Win95Button } from "@/app/components/RetroUI";
 
 const initialState: ContactState = {
   success: false,
@@ -13,105 +13,78 @@ export default function ContactPage() {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState);
 
   return (
-    <main className="min-h-screen p-8 max-w-2xl mx-auto font-sans">
-      <header className="mb-10 text-center">
-        <h1 className="text-3xl font-bold mb-4">Contact</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          制作の依頼やご質問など、お気軽にお問い合わせください。
-        </p>
-      </header>
-
-      <section className="bg-white dark:bg-gray-900 p-8 rounded-lg border dark:border-gray-800 shadow-sm">
+    <main className="max-w-2xl mx-auto font-sans">
+      <Win95Window title="Compose New Message">
         {state.success ? (
-          <div className="text-center py-10">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You!</h2>
-            <p className="mb-6">{state.message}</p>
-            <Link
-              href="/"
-              className="inline-block px-6 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm font-medium"
-            >
-              トップページに戻る
-            </Link>
+          <div className="text-center py-10 bg-white win95-border-in m-4">
+            <h2 className="text-xl font-bold text-[#000080] mb-4">Message Sent</h2>
+            <p className="mb-6 text-sm">{state.message}</p>
+            <Win95Button onClick={() => (window.location.href = "/")}>
+              OK
+            </Win95Button>
           </div>
         ) : (
-          <form action={formAction} className="space-y-6">
+          <form action={formAction} className="p-2 space-y-4">
+            {/* メニューバー風装飾 */}
+            <div className="flex gap-4 pb-2 border-b border-white shadow-[0_1px_0_#808080] mb-4 select-none text-sm">
+              <span className="flex items-center gap-1">✉️ Send</span>
+              <span className="text-gray-500">📎 Attach</span>
+            </div>
+
             {state.message && !state.success && (
-              <div className="p-4 bg-red-50 text-red-600 text-sm rounded border border-red-200">
-                {state.message}
+              <div className="p-2 bg-red-100 text-red-600 text-sm border border-red-500">
+                ⚠ {state.message}
               </div>
             )}
 
             {/* 名前入力 */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2">
-                お名前 <span className="text-red-500">*</span>
-              </label>
+            <div className="flex items-center gap-2">
+              <label htmlFor="name" className="w-20 text-right text-sm">To (Name):</label>
               <input
                 type="text"
                 id="name"
                 name="name"
-                // ▼ 追加: defaultValueを設定
                 defaultValue={state.inputs?.name}
-                className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="山田 太郎"
+                className="flex-1 p-1 win95-border-in focus:outline-none font-mono bg-white"
               />
-              {state.errors?.name && (
-                <p className="text-red-500 text-xs mt-1">{state.errors.name[0]}</p>
-              )}
             </div>
+            {state.errors?.name && <p className="ml-20 text-red-600 text-xs">{state.errors.name[0]}</p>}
 
             {/* メールアドレス入力 */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                メールアドレス <span className="text-red-500">*</span>
-              </label>
+            <div className="flex items-center gap-2">
+              <label htmlFor="email" className="w-20 text-right text-sm">From (Email):</label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                // ▼ 追加: defaultValueを設定
                 defaultValue={state.inputs?.email}
-                className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="your@email.com"
+                className="flex-1 p-1 win95-border-in focus:outline-none font-mono bg-white"
               />
-              {state.errors?.email && (
-                <p className="text-red-500 text-xs mt-1">{state.errors.email[0]}</p>
-              )}
             </div>
+            {state.errors?.email && <p className="ml-20 text-red-600 text-xs">{state.errors.email[0]}</p>}
 
             {/* メッセージ入力 */}
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium mb-2">
-                お問い合わせ内容 <span className="text-red-500">*</span>
-              </label>
+            <div className="mt-4">
               <textarea
                 id="message"
                 name="message"
-                rows={5}
-                // ▼ 追加: defaultValueを設定
+                rows={8}
                 defaultValue={state.inputs?.message}
-                className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="お問い合わせ内容を入力してください..."
+                className="w-full p-2 win95-border-in focus:outline-none font-mono bg-white resize-none"
+                placeholder="Type your message here..."
               ></textarea>
-              {state.errors?.message && (
-                <p className="text-red-500 text-xs mt-1">{state.errors.message[0]}</p>
-              )}
+              {state.errors?.message && <p className="text-red-600 text-xs">{state.errors.message[0]}</p>}
             </div>
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all ${
-                isPending
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg"
-              }`}
-            >
-              {isPending ? "送信中..." : "送信する"}
-            </button>
+            {/* 送信ボタンエリア */}
+            <div className="flex justify-end pt-2">
+              <Win95Button type="submit" disabled={isPending} className="w-32">
+                {isPending ? "Sending..." : "Send Mail"}
+              </Win95Button>
+            </div>
           </form>
         )}
-      </section>
+      </Win95Window>
     </main>
   );
 }

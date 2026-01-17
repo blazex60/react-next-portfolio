@@ -1,8 +1,9 @@
-import { getBlogs, getBlogDetail } from "@/app/libs/microcms";
+import { getBlogs, getBlogDetail } from "@/libs/microcms";
 import { notFound } from "next/navigation";
-import parse, { DOMNode, Element } from "html-react-parser";
+import parse from "html-react-parser";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Win95Window } from "@/app/components/RetroUI"; // コンポーネント追加
 
 export async function generateStaticParams() {
   const { contents } = await getBlogs();
@@ -17,31 +18,21 @@ export default async function BlogDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log(`[Detail Page] Fetching ID: ${id}`);
+  const blog = await getBlogDetail(id).catch(() => null);
 
-  const blog = await getBlogDetail(id).catch((e) => {
-    console.error(`[Detail Page] API Error:`, e);
-    return null;
-  });
-
-  if (!blog) {
-    return notFound();
-  }
+  if (!blog) return notFound();
 
   const parseOptions = {
-    replace: (domNode: DOMNode) => {
-      if (domNode instanceof Element && domNode.name === "pre") {
+    replace: (domNode: any) => {
+      if (domNode.name === "pre") {
         const codeNode = domNode.children[0];
-        if (codeNode instanceof Element && codeNode.name === "code") {
+        if (codeNode && codeNode.name === "code") {
           const className = codeNode.attribs.class || "";
           const language = className.replace("language-", "");
-          const codeString =
-            codeNode.children[0] && "data" in codeNode.children[0]
-              ? codeNode.children[0].data
-              : "";
+          const codeString = codeNode.children[0]?.data || "";
           return (
-            <div className="my-6 rounded-lg overflow-hidden shadow-lg text-sm">
-              <SyntaxHighlighter language={language} style={vscDarkPlus}>
+            <div className="my-4 border-2 border-gray-400">
+              <SyntaxHighlighter language={language} style={vscDarkPlus} PreTag="div" customStyle={{ margin: 0 }}>
                 {codeString}
               </SyntaxHighlighter>
             </div>
@@ -52,33 +43,31 @@ export default async function BlogDetailPage({
   };
 
   return (
-    <main className="min-h-screen p-8 max-w-3xl mx-auto font-sans">
-      <article>
-        <header className="mb-8 border-b pb-6">
-          <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
-          <div className="flex flex-wrap gap-4 text-sm text-gray-500 items-center">
-            <time>{new Date(blog.publishedAt).toLocaleDateString()}</time>
-            {blog.category && (
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                {blog.category.name}
-              </span>
-            )}
-          </div>
-          {/* タグ表示の修正: tagsの存在確認後にmapを実行 */}
-          {blog.tags && blog.tags.length > 0 && (
-            <div className="mt-4 flex gap-2">
-              {blog.tags.map((tag) => (
-                <span key={tag.id} className="text-xs px-2 py-1 border rounded-full">
-                  #{tag.name}
-                </span>
-              ))}
-            </div>
-          )}
-        </header>
-        <div className="prose dark:prose-invert max-w-none">
-          {parse(blog.content, parseOptions)}
+    <main className="max-w-4xl mx-auto font-sans pb-8">
+      <Win95Window title={`${blog.title} - Notepad`}>
+        {/* メニューバー風装飾 */}
+        <div className="flex gap-4 px-2 py-1 text-sm border-b border-gray-400 mb-2 select-none">
+          <span className="underline">File</span>
+          <span className="underline">Edit</span>
+          <span className="underline">Search</span>
+          <span className="underline">Help</span>
         </div>
-      </article>
+
+        {/* 記事コンテンツエリア（ここを白背景・凹み枠線にする） */}
+        <div className="win95-border-in bg-white p-6 min-h-[400px]">
+          <header className="mb-6 border-b border-dashed border-gray-400 pb-4">
+            <h1 className="text-2xl font-bold mb-2 font-mono">{blog.title}</h1>
+            <div className="flex gap-4 text-xs text-gray-500 font-mono">
+              <time>DATE: {new Date(blog.publishedAt).toLocaleDateString()}</time>
+              <span>CAT : {blog.category?.name}</span>
+            </div>
+          </header>
+
+          <div className="prose max-w-none font-mono text-sm leading-relaxed">
+            {parse(blog.content, parseOptions)}
+          </div>
+        </div>
+      </Win95Window>
     </main>
   );
 }

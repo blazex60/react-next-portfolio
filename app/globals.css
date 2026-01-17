@@ -1,19 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Win95 Colors */
+  --win-gray: #c0c0c0;
+  --win-dark: #808080;
+  --win-black: #000000;
+  --win-white: #ffffff;
+  --win-blue: #000080; /* タイトルバーの青 */
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dot-gothic), monospace;
+  image-rendering: pixelated; /* 画像もドット絵っぽく */
+}
+
+/* ユーティリティクラス: ウィンドウのような立体的な枠線（凸） */
+.win95-border-out {
+  background-color: var(--win-gray);
+  box-shadow: 
+    inset 1px 1px 0px var(--win-white),
+    inset -1px -1px 0px var(--win-black),
+    inset 2px 2px 0px var(--win-gray),
+    inset -2px -2px 0px var(--win-dark);
+}
+
+/* ユーティリティクラス: 入力フォームのような凹んだ枠線 */
+.win95-border-in {
+  background-color: var(--win-white);
+  box-shadow: 
+    inset 1px 1px 0px var(--win-black),
+    inset -1px -1px 0px var(--win-white),
+    inset 2px 2px 0px var(--win-dark),
+    inset -2px -2px 0px var(--win-gray);
+}
+
+/* ボタンを押した時のスタイル */
+.win95-btn:active {
+  box-shadow: 
+    inset 1px 1px 0px var(--win-black),
+    inset -1px -1px 0px var(--win-white),
+    inset 2px 2px 0px var(--win-dark),
+    inset -2px -2px 0px var(--win-gray);
+  transform: translate(1px, 1px);
 }
