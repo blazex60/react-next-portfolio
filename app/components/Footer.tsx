@@ -3,7 +3,7 @@
 import { useWindows } from "../contexts/WindowContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export const Footer = () => {
   const { windows, minimizeWindow, focusWindow, restoreWindow } = useWindows();
@@ -13,6 +13,7 @@ export const Footer = () => {
     new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   );
   const [showWelcome, setShowWelcome] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 1秒ごとに時刻を更新
@@ -22,6 +23,23 @@ export const Footer = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // 外側クリックでメニューを閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowWelcome(false);
+      }
+    };
+
+    if (showWelcome) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showWelcome]);
 
   const handleTaskClick = (windowId: string) => {
     const window = windows.find(w => w.id === windowId);
@@ -48,10 +66,12 @@ export const Footer = () => {
       <div className="flex items-center gap-2 grow overflow-x-auto">
         
         {/* スタートボタン */}
-        <div className="relative">
+        <div className="relative" ref={menuRef}>
           <button 
             onClick={() => setShowWelcome(!showWelcome)}
-            className="win95-border-out flex items-center gap-1 px-2 py-0.5 active:shadow-[inset_1px_1px_0px_#000000] active:translate-y-px font-bold shrink-0"
+            className={`win95-border-out flex items-center gap-1 px-2 py-0.5 font-bold shrink-0 ${
+              showWelcome ? "win95-button-pressed" : ""
+            }`}
           >
             <span className="text-lg">🪟</span>
             <span className="mt-0.5">Start</span>
@@ -59,26 +79,31 @@ export const Footer = () => {
 
           {/* スタートメニュー */}
           {showWelcome && (
-            <div className="absolute bottom-full left-0 mb-1 win95-border bg-[#c0c0c0] min-w-48 shadow-lg">
-              <div className="bg-linear-to-r from-[#000080] to-[#1084d0] text-white p-2 text-xs font-bold vertical-text">
-                Windows <span className="font-normal">95</span>
-              </div>
-              <div className="p-2 space-y-1">
-                <div className="win95-border-out px-3 py-2 flex items-center gap-2 bg-[#c0c0c0]">
-                  <span>👤</span>
-                  <div className="text-xs">
-                    <div className="font-bold">{t("welcome")}</div>
-                    <div>{user}!</div>
-                  </div>
+            <div className="absolute bottom-full left-0 mb-1 win95-border bg-[#c0c0c0] min-w-48 shadow-lg z-50">
+              <div className="flex">
+                <div className="bg-linear-to-r from-[#000080] to-[#1084d0] text-white px-2 py-8 text-xs font-bold vertical-text flex items-center justify-center">
+                  <div>Windows <span className="font-normal">95</span></div>
                 </div>
-                <div className="border-t-2 border-gray-400 my-1"></div>
-                <button 
-                  onClick={logout}
-                  className="win95-button w-full px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#000080] hover:text-white"
-                >
-                  <span>🚪</span>
-                  <span>{language === "ja" ? "ログアウト" : "Logout"}</span>
-                </button>
+                <div className="p-2 space-y-1 flex-1">
+                  <div className="win95-border-out px-3 py-2 flex items-center gap-2 bg-[#c0c0c0]">
+                    <span>👤</span>
+                    <div className="text-xs">
+                      <div className="font-bold">{t("welcome")}</div>
+                      <div className="text-[#000080]">{user}</div>
+                    </div>
+                  </div>
+                  <div className="border-t-2 border-gray-400 my-1"></div>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setShowWelcome(false);
+                    }}
+                    className="win95-button w-full px-3 py-2 text-sm flex items-center gap-2 hover:bg-[#000080] hover:text-white text-left"
+                  >
+                    <span>🚪</span>
+                    <span>{language === "ja" ? "ログアウト" : "Logout"}</span>
+                  </button>
+                </div>
               </div>
             </div>
           )}
