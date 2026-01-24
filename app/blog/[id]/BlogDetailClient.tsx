@@ -109,18 +109,17 @@ export default function BlogDetailClient({ blog }: BlogDetailClientProps) {
             <span className="underline">Help</span>
           </div>
 
-<<<<<<< HEAD
           <div className="win95-border-in bg-white p-6 min-h-100">
-=======
-          <div className="win95-border-in bg-white p-6 min-h-[400px]">
->>>>>>> main
             <header className="mb-6 border-b border-dashed border-gray-400 pb-4">
               <h1 className="text-2xl font-bold mb-2 font-mono">{blog.title}</h1>
               <div className="flex gap-4 text-xs text-gray-500 font-mono">
                 <time>DATE: {new Date(blog.publishedAt).toLocaleDateString()}</time>
                 <span>CAT : {blog.category?.name}</span>
-          <div className="win95-border-in bg-white p-6 min-h-100">  {parse(blog.content, parseOptions)}
-            </div>
+              </div>
+            </header>
+            <article className="prose max-w-none">
+              {parse(blog.content, parseOptions)}
+            </article>
           </div>
         </>
       ),
@@ -164,11 +163,11 @@ export default function BlogDetailClient({ blog }: BlogDetailClientProps) {
             onMinimize={() => minimizeWindow(window.id)}
             onMaximize={() => maximizeWindow(window.id)}
             onFocus={() => focusWindow(window.id)}
-<<<<<<< HEAD
             onPositionChange={(x: number, y: number) => updateWindowPosition(window.id, x, y)}
-=======
-            onPositionChange={(x, y) => updateWindowPosition(window.id, x, y)}
-            onPositionChange={(x: number, y: number) => updateWindowPosition(window.id, x, y)}
+          >
+            {window.content}
+          </Win95Window>
+        )
       ))}
     </div>
   );
