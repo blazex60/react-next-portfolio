@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 type AuthContextType = {
   user: string | null;
@@ -12,13 +12,20 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // 初期値としてlocalStorageから読み込む（クライアントサイドのみ）
-  const [user, setUser] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("win95_user");
-    }
-    return null;
-  });
+  const [user, setUser] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // クライアントサイドでマウント後にlocalStorageから復元
+  useEffect(() => {
+    const loadUser = () => {
+      const savedUser = localStorage.getItem("win95_user");
+      if (savedUser) {
+        setUser(savedUser);
+      }
+      setIsLoading(false);
+    };
+    loadUser();
+  }, []);
 
   const login = (username: string) => {
     setUser(username);
@@ -31,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading: false }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

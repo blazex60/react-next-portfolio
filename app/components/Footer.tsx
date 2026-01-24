@@ -9,17 +9,18 @@ export const Footer = () => {
   const { windows, minimizeWindow, focusWindow, restoreWindow } = useWindows();
   const { user, logout } = useAuth();
   const { language, t } = useLanguage();
-  const [currentTime, setCurrentTime] = useState<string>(
-    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  );
+  const [currentTime, setCurrentTime] = useState<string>("");
   const [showWelcome, setShowWelcome] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 1秒ごとに時刻を更新
-    const timer = setInterval(() => {
+    // 時刻初期化と更新を関数化
+    const updateTime = () => {
       setCurrentTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    }, 1000);
+    };
+    
+    updateTime(); // 初回実行
+    const timer = setInterval(updateTime, 1000); // 1秒ごとに更新
 
     return () => clearInterval(timer);
   }, []);
