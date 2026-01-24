@@ -61,7 +61,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full z-50 bg-[#c0c0c0] win95-border-out p-1 flex items-center justify-between h-10 select-none">
+    <footer className="fixed bottom-0 left-0 w-full z-[9999] bg-[#c0c0c0] win95-border-out p-1 flex items-center justify-between h-10 select-none">
       
       {/* 左側：スタートボタンとタスク */}
       <div className="flex items-center gap-2 grow overflow-x-auto">
@@ -80,7 +80,7 @@ export const Footer = () => {
 
           {/* スタートメニュー */}
           {showWelcome && (
-            <div className="absolute bottom-full left-0 mb-1 win95-border bg-[#c0c0c0] min-w-48 shadow-lg z-50">
+            <div className="absolute bottom-full left-0 mb-1 win95-border bg-[#c0c0c0] min-w-48 shadow-lg z-[10000]">
               <div className="flex">
                 <div className="bg-linear-to-r from-[#000080] to-[#1084d0] text-white px-2 py-8 text-xs font-bold vertical-text flex items-center justify-center">
                   <div>Windows <span className="font-normal">95</span></div>
@@ -90,7 +90,7 @@ export const Footer = () => {
                     <span>👤</span>
                     <div className="text-xs">
                       <div className="font-bold">{t("welcome")}</div>
-                      <div className="text-[#000080]">{user}</div>
+                      <div className="text-[#000080]">{user || "Guest"}</div>
                     </div>
                   </div>
                   <div className="border-t-2 border-gray-400 my-1"></div>
