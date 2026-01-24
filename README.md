@@ -51,3 +51,43 @@ npm install
 
 # 4. Run the development server
 npm run dev
+```
+
+## 📝 microCMS Setup
+
+このプロジェクトはmicroCMSを使用してブログ記事とプロフィール情報を管理しています。
+
+### ブログAPI (blogs)
+リスト形式のAPIを作成し、以下のフィールドを設定してください：
+
+- **title** (テキスト) - 記事のタイトル
+- **content** (リッチエディタ) - 記事の本文
+- **eyecatch** (画像) - アイキャッチ画像
+- **category** (コンテンツ参照) - カテゴリー
+- **tags** (複数コンテンツ参照) - タグ
+
+### プロフィールAPI (profile)
+オブジェクト形式のAPIを作成し、以下のフィールドを設定してください：
+
+- **name** (テキスト) - 名前
+- **role** (テキスト) - 職種・役職
+- **summary** (テキストエリア) - 自己紹介文
+- **githubUrl** (テキスト) - GitHub URL（任意）
+- **skills** (繰り返し) - スキル一覧
+  - name (テキスト) - スキル名
+  - level (数値) - レベル (1-5)
+  - icon (テキスト) - アイコン（任意）
+- **histories** (繰り返し) - 経歴
+  - year (テキスト) - 年月
+  - title (テキスト) - タイトル
+  - description (テキストエリア) - 詳細
+
+### 環境変数の設定
+
+`.env.local`ファイルに以下を設定：
+
+```bash
+MICROCMS_SERVICE_DOMAIN=your-service-domain
+MICROCMS_API_KEY=your-api-key
+RESEND_API_KEY=your-resend-key
+npm run dev

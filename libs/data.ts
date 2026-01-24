@@ -1,7 +1,7 @@
 // 型定義（ドメイン駆動設計のような意識）
 export type Skill = {
   name: string;
-  level: 1 | 2 | 3 | 4 | 5; // 5段階評価
+  level: number; // 1-5の範囲（小数も許容）
   icon?: string; // アイコンクラス名など（今回は省略可）
 };
 
