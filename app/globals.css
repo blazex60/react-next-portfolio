@@ -43,3 +43,9 @@ body {
     inset -2px -2px 0px var(--win-gray);
   transform: translate(1px, 1px);
 }
+
+/* Windows 95風の縦書きテキスト（スタートメニュー用） */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

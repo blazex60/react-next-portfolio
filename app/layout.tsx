@@ -3,6 +3,9 @@ import { DotGothic16 } from "next/font/google";
 import "./globals.css";
 import { Footer } from "./components/Footer";
 import { WindowProvider } from "./contexts/WindowContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import AuthWrapper from "./components/AuthWrapper";
 
 const dotGothic = DotGothic16({
   weight: ["400"],
@@ -26,13 +29,19 @@ export default function RootLayout({
         className={`${dotGothic.className} antialiased min-h-screen flex flex-col`}
         style={{ backgroundColor: "#008080", color: "#000" }}
       >
-        <WindowProvider>
-          <div className="grow w-full p-4 pb-16"> 
-            {children}
-          </div>
+        <AuthProvider>
+          <LanguageProvider>
+            <WindowProvider>
+              <AuthWrapper>
+                <div className="grow w-full p-4 pb-16"> 
+                  {children}
+                </div>
 
-          <Footer />
-        </WindowProvider>
+                <Footer />
+              </AuthWrapper>
+            </WindowProvider>
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );
