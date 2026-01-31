@@ -109,7 +109,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
                 </label>
                 <div className="win95-border-in bg-white">
                   <input
-                    type="password"
+                    type="text"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-2 py-1 text-sm outline-none bg-transparent"
